@@ -28,32 +28,23 @@ class tetra_grip_api : public QObject
 
 public:
     explicit tetra_grip_api(QObject *parent = nullptr);
-    //bool remote_mode=false;
 
-    #define MAX_CONFIG_FILE_LENGTH (10000)
+    void static send_config_file(QByteArray config, bool nonvolatile);
+    void static send_long_register(uint8_t, uint32_t, uint8_t *);
+    void static clear_stim_config(void);
+    bool static send_short_block(STIM_GUI_MESSAGE_S_BLOCK_T *pblock);
+    void static read_stim_status_reg(void);
+    void static battery_percentage(void);
 
-     void static send_config_file(QByteArray config, bool nonvolatile);
-     void static send_long_register(uint8_t, uint32_t, uint8_t *);
-     void static clear_stim_config(void);
-     bool static send_short_block(STIM_GUI_MESSAGE_S_BLOCK_T *pblock);
-     void static stimulation_pause(bool);
-     void static stimulation_start(bool);
-     void static toggle_pause(void);
-     void static read_stim_status_reg(void);
-     void static battery_percentage(void);
-     void static stimulation_set_current(unsigned int, unsigned int);
 
      QSerialPort *serial = nullptr;
+     QString comPortName;
 
-     QTimer autoConnectionTimer;
-     bool tryToAutoconnect;
 
 signals:
 
-     void successfullyConnectedTo(QString portName);
-     void AutoconnectionIsSet(bool value);
+
      void tetraGripEvent(STIM_GUI_TOPIC_T topic, uint8_t reg, uint32_t value);
-     void deviceError(bool);
 
 
 public slots:
@@ -61,18 +52,11 @@ public slots:
      void openSerialPort();
      void closeSerialPort();
      void readData();
-     bool autoconnect();
-     bool connectTo(QString port);
-     void setAutoconnect(bool value);
 
-
-private slots:
-
-     void ErrorHandler(QSerialPort::SerialPortError error);
 
 private:
 
-        QString comPortName;
+        //QString comPortName;
 
 };
 
