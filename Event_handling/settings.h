@@ -23,6 +23,7 @@ public slots:
  void eventHandler(STIM_GUI_TOPIC_T topic, uint8_t reg, uint32_t value);
 
 private slots:
+
  void on_pushButton_open_clicked();
 
 private:

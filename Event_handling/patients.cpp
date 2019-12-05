@@ -1,12 +1,14 @@
 #include "patients.h"
 #include "ui_patients.h"
+#include<QDebug>
 
 Patients::Patients(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Patients)
 {
     ui->setupUi(this);
-     connect(&api, &tetra_grip_api::tetraGripEvent,this, &Patients::eventHandlerTwo);
+    qDebug()<<"Patients connect"<<connect(&api, &tetra_grip_api::tetraGripEvent,this, &Patients::eventHandlerTwo);
+    tetra_grip_api::battery_percentage();
 }
 
 Patients::~Patients()

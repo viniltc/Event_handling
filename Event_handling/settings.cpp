@@ -11,7 +11,9 @@ Settings::Settings(QWidget *parent)
 {
     ui->setupUi(this);
 
-   qDebug()<<connect(&api, &tetra_grip_api::tetraGripEvent,this, &Settings::eventHandler);
+    qDebug()<<"Settings connect"<<connect(&api, &tetra_grip_api::tetraGripEvent,this, &Settings::eventHandler);
+
+    tetra_grip_api::battery_percentage();
 }
 
 Settings::~Settings()
