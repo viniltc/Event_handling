@@ -138,21 +138,7 @@ bool tetra_grip_api::send_short_block(STIM_GUI_MESSAGE_S_BLOCK_T *pblock)
     return STIM_GUI_Send_message(STIMULATOR_ADDRESS1, GUI_ADDRESS, pblock);
 }
 
-void tetra_grip_api::read_stim_status_reg(void)
-{
-    STIM_GUI_MESSAGE_S_BLOCK_T block={};
 
-    block.msg_type=READ_COMMAND;
-    block.topic=TOPIC_STIMULATOR;
-    block.index=0;
-    block.reg_address=STIM_REG_STATUS;
-    block.data_length=1;
-    block.data=nullptr;
-    if(!send_short_block(&block))
-    {
-        printf("Failed to send the read command for the status register.\n");
-    }
-}
 
 void tetra_grip_api::battery_percentage(void)
 {
@@ -170,8 +156,82 @@ void tetra_grip_api::battery_percentage(void)
     }
 }
 
-void tetra_grip_reporter(STIM_GUI_TOPIC_T topic, uint8_t reg, uint32_t value)
+void tetra_grip_api::read_stim_status_reg(void)
 {
-    emit api.tetraGripEvent(topic, reg, value);
+    STIM_GUI_MESSAGE_S_BLOCK_T block={};
+
+    block.msg_type=READ_COMMAND;
+    block.topic=TOPIC_STIMULATOR;
+    block.index=0;
+    block.reg_address=STIM_REG_STATUS;
+    block.data_length=1;
+    block.data=nullptr;
+    if(!send_short_block(&block))
+    {
+        printf("Failed to send the read command for the status register.\n");
+    }
+}
+
+ void  tetra_grip_api::reset_sensors(uint8_t sensor_address)
+{
+    uint8_t command=SENSOR_CMD_RESET;
+
+    STIM_GUI_MESSAGE_S_BLOCK_T block={};
+
+    block.msg_type=WRITE_COMMAND;
+    block.topic=TOPIC_SENSOR;
+    block.index=sensor_address;
+    block.reg_address=SENSOR_REG_COMMAND;
+    block.data_length=1;
+    block.data=&command;
+    if(!send_short_block(&block))
+    {
+        printf("Failed to send reset command to sensor %d.\n", sensor_address);
+    }
+}
+
+ void  tetra_grip_api::set_sensor_data_rate(uint8_t sensor_address, uint8_t Hz)
+ {
+     STIM_GUI_MESSAGE_S_BLOCK_T block={};
+
+     block.msg_type=WRITE_COMMAND;
+     block.topic=TOPIC_SENSOR;
+     block.index=sensor_address;
+     block.reg_address=SENSOR_REG_UPDATE_RATE;
+     block.data_length=1;
+     block.data=&Hz;
+     if(!send_short_block(&block))
+     {
+         printf("Failed to send data rate to sensor %d.\n", sensor_address);
+     }
+ }
+
+void tetra_grip_api::sensor_led(uint8_t sensor_address, bool on)
+ {
+     uint8_t command=on?SENSOR_CMD_AV_INDICATOR_ON:SENSOR_CMD_AV_INDICATOR_OFF;
+
+     STIM_GUI_MESSAGE_S_BLOCK_T block={};
+
+     block.msg_type=WRITE_COMMAND;
+     block.topic=TOPIC_SENSOR;
+     block.index=sensor_address;
+     block.reg_address=SENSOR_REG_COMMAND;
+     block.data_length=1;
+     block.data=&command;
+     if(!send_short_block(&block))
+     {
+         printf("Failed to send LED %s command to sensor %d.\n", (on?"ON":"OFF"), sensor_address);
+     }
+ }
+
+void tetra_grip_reporter(STIM_GUI_TOPIC_T topic,uint8_t index, uint8_t reg, uint32_t value)
+{
+    emit api.tetraGripEvent(topic, index, reg, value);
+
+}
+
+void tetra_grip_sensor_reporter(uint8_t index, SENSOR_DATA_T *sample)
+{
+    emit api.tetraGripSensorEvent(index, sample);
 
 }

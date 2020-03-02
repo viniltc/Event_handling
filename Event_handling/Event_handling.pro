@@ -1,4 +1,4 @@
-QT       += core gui serialport
+QT       += core gui serialport printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,6 +23,7 @@ SOURCES += \
     Stim_includes/stim_gui_protocol_tx.c \
     main.cpp \
     patients.cpp \
+    qcustomplot.cpp \
     settings.cpp \
     tetra_grip_api.cpp \
     tetra_grip_reporter.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     Stim_includes/system_definitions.h \
     Stim_includes/uart.h \
     patients.h \
+    qcustomplot.h \
     settings.h \
     tetra_grip_api.h \
     tetra_grip_reporter.h \

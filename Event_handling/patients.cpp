@@ -8,6 +8,8 @@ Patients::Patients(QWidget *parent) :
 {
     ui->setupUi(this);
     qDebug()<<"Patients connect"<<connect(&api, &tetra_grip_api::tetraGripEvent,this, &Patients::eventHandlerTwo);
+
+
     tetra_grip_api::battery_percentage();
 }
 
